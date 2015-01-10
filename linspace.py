@@ -38,6 +38,8 @@ class linspace(collections.abc.Sequence):
                 (other.start, other.stop, other.num))
     def __ne__(self, other):
         return not self==other
+    def __hash__(self):
+        return hash((type(self), self.start, self.stop, self.num))
 
 linspace1 = linspace
 
@@ -92,6 +94,8 @@ class linspace(collections.abc.Sequence):
                 (other.start, other.stop, other.num))
     def __ne__(self, other):
         return not self==other
+    def __hash__(self):
+        return hash((type(self), self.start, self.stop, self.num))    
 
 linspace2 = linspace
 
