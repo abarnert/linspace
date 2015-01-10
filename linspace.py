@@ -31,6 +31,13 @@ class linspace(collections.abc.Sequence):
     def __repr__(self):
         return '{}({}, {}, {})'.format(type(self).__name__,
                                        self.start, self.stop, self.num)
+    def __eq__(self, other):
+        if not isinstance(other, linspace):
+            return False
+        return ((self.start, self.stop, self.num) ==
+                (other.start, other.stop, other.num))
+    def __ne__(self, other):
+        return not self==other
 
 linspace1 = linspace
 
@@ -38,15 +45,17 @@ linspace1 = linspace
 # fix to make sure the last value is == stop instead of possibly off
 # by one digit.
 #
-# From a quick test, it's a tiny bit faster--e.g., 6.49us vs. 6.89us for
-# linspace(1, 2, 5000). It doesn't accumulate rounding errors--for
-# the same test, every 5th element is different by one digit, and sometimes
-# the following element, but the one after that is not; when I test with
-# very small numbers, I get a similar pattern, and linspace2 actually looks
-# like the better of the two. Also, not multiplying start and stop by i
-# means that it works with types that can't be multiplied by i but their
-# differences can (like datetimes), and with types that might overflow
-# (like fixed-point numbers). And it's exactly what numpy does:
+# From a quick test, it's a tiny bit faster--e.g., 6.49us vs. 6.89us
+# for linspace(1, 2, 5000). It doesn't accumulate rounding errors--for
+# the same test, every 5th element is different by one digit, and
+# sometimes the following element, but the one after that is not; when
+# I test with very small numbers, I get a similar pattern, and
+# linspace2 actually looks like the better of the two--until you get
+# down to denormal numbers, at which point it does... but then if you
+# go to the other end of the scale, it avoids overflow, so that's a
+# wash. And not multiplying start and stop by i also means that it
+# works with types that can't be multiplied by i but their differences
+# can (like datetimes). And it's exactly what numpy does:
 # https://github.com/numpy/numpy/blob/v1.9.1/numpy/core/function_base.py#L9
 class linspace(collections.abc.Sequence):
     """linspace(start, stop, num) -> linspace object
@@ -76,6 +85,13 @@ class linspace(collections.abc.Sequence):
     def __repr__(self):
         return '{}({}, {}, {})'.format(type(self).__name__,
                                        self.start, self.stop, self.num)
+    def __eq__(self, other):
+        if not isinstance(other, linspace):
+            return False
+        return ((self.start, self.stop, self.num) ==
+                (other.start, other.stop, other.num))
+    def __ne__(self, other):
+        return not self==other
 
 linspace2 = linspace
 
@@ -83,5 +99,5 @@ if __name__ == '__main__':
     print(list(linspace(1, 2, 5)))
     import datetime
     print(list(map(str, linspace(datetime.datetime(2014, 1, 1),
-                        datetime.datetime(2015, 1, 1),
-                        13))))
+                                 datetime.datetime(2015, 1, 1),
+                                 13))))
