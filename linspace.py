@@ -19,6 +19,10 @@ class linspace(collections.abc.Sequence):
     def __len__(self):
         return self.num
     def __getitem__(self, i):
+        if isinstance(i, slice):
+            return [self[x] for x in range(*i.indices(len(self)))]
+        if i < 0:
+            i = self.num + i
         if i >= self.num:
             raise IndexError('linspace object index out of range')
         return (self.stop*i + self.start*(self.num-i-1))/(self.num-1)
