@@ -22,6 +22,9 @@ class linspace(collections.abc.Sequence):
         if i >= self.num:
             raise IndexError('linspace object index out of range')
         return (self.stop*i + self.start*(self.num-i-1))/(self.num-1)
+    def __repr__(self):
+        return '{}({}, {}, {})'.format(type(self).__name__,
+                                       self.start, self.stop, self.num)
 
 if __name__ == '__main__':
     print(list(linspace(1, 2, 5)))
