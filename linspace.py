@@ -2,9 +2,16 @@
 
 import collections
 import collections.abc
+import numbers
 
 class linspace(collections.abc.Sequence):
+    """linspace(start, stop, num) -> linspace object
+
+    Return a virtual sequence of num numbers from start to stop."""
+    
     def __init__(self, start, stop, num):
+        if not isinstance(num, numbers.Integral) or num <= 0:
+            raise ValueError('num must be a positive integer')
         self.start, self.stop, self.num = start, stop, num
     def __len__(self):
         return self.num
