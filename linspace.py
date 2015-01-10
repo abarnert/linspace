@@ -6,8 +6,11 @@ import numbers
 
 class linspace(collections.abc.Sequence):
     """linspace(start, stop, num) -> linspace object
-
-    Return a virtual sequence of num numbers from start to stop."""
+    
+    Return a virtual sequence of num numbers from start to stop (inclusive).
+    
+    If you need a half-open range, use linspace(start, stop, num+1)[:-1].
+    """
     
     def __init__(self, start, stop, num):
         if not isinstance(num, numbers.Integral) or num <= 0:
